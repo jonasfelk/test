@@ -22,5 +22,26 @@ jobs:
         with:
           version: latest
 
-      - run: supabase link --project-ref $SUPABASE_PROJECT_ID
+      - run: supabase link --project-ref eguvpniwccihqtbvjovk
       - run: supabase db push
+
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Publish to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Run a build step here if your project requires
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 2fe55ec2924319fd78ffefd0e3d213ff
+          projectName: test
+          directory: /
+          gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
