@@ -30,7 +30,7 @@ jobs:
             exit 1
           fi
 
-      # Run database migrations
-      - name: Run database migrations
-        run: supabase db migrate
+      # # Run database migrations
+      # - name: Run database migrations
+      #   run: supabase db migrate
 
