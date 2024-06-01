@@ -2,7 +2,8 @@ create sequence "public"."notes_id_seq";
 
 create table "public"."notes" (
     "id" integer not null default nextval('notes_id_seq'::regclass),
-    "title" text
+    "title" text,
+    "desc" text
 );
 
 
