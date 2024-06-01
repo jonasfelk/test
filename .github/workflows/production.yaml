@@ -49,5 +49,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 2fe55ec2924319fd78ffefd0e3d213ff
           projectName: test
-          directory: /
+          directory: .vercel/output/static
           gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
