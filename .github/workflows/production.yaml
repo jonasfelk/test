@@ -22,7 +22,7 @@ jobs:
         with:
           version: latest
 
-      - run: supabase link --project-ref eguvpniwccihqtbvjovk
+      - run: supabase link --project $SUPABASE_PROJECT_ID
       - run: supabase db push
 
   publish:
