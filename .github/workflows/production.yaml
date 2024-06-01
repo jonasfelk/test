@@ -25,29 +25,29 @@ jobs:
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
       - run: supabase db push
 
-      - name: Install dependencies
-        run: npm install
+      # - name: Install dependencies
+      #   run: npm install
 
-      - name: Build project
-        run: npx @cloudflare/next-on-pages@1
+      # - name: Build project
+      #   run: npx @cloudflare/next-on-pages@1
 
-  publish:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
-    name: Publish to Cloudflare Pages
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # publish:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     deployments: write
+  #   name: Publish to Cloudflare Pages
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      # Run a build step here if your project requires
+  #     # Run a build step here if your project requires
 
-      - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 2fe55ec2924319fd78ffefd0e3d213ff
-          projectName: test
-          directory: .vercel/output/static
-          gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
+  #     - name: Publish to Cloudflare Pages
+  #       uses: cloudflare/pages-action@1
+  #       with:
+  #         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  #         accountId: 2fe55ec2924319fd78ffefd0e3d213ff
+  #         projectName: test
+  #         directory: /
+  #         gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
