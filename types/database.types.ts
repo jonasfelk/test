@@ -39,18 +39,21 @@ export type Database = {
           comment: string | null
           desc: string | null
           id: number
+          like: number | null
           title: string | null
         }
         Insert: {
           comment?: string | null
           desc?: string | null
           id?: number
+          like?: number | null
           title?: string | null
         }
         Update: {
           comment?: string | null
           desc?: string | null
           id?: number
+          like?: number | null
           title?: string | null
         }
         Relationships: []
