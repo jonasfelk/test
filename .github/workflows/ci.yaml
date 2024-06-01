@@ -10,14 +10,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      # Cache npm dependencies
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-           ${{ runner.os }}-npm-
-            
+
       # Set up Supabase CLI
       - uses: supabase/setup-cli@v1
         with:
