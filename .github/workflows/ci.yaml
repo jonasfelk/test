@@ -45,3 +45,17 @@ jobs:
 
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
       - run: supabase db push --dry-run
+
+  # database-test:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: supabase/setup-cli@v1
+  #       with:
+  #         version: latest
+
+  #     # Database test here
+  #     - name: Run database tests
+  #       run: |
+  #         supabase sql --file=path/to/your/database_test.sql
