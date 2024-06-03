@@ -41,6 +41,7 @@ export type Database = {
           id: number
           like: number | null
           title: string | null
+          user: number | null
         }
         Insert: {
           comment?: string | null
@@ -48,6 +49,7 @@ export type Database = {
           id?: number
           like?: number | null
           title?: string | null
+          user?: number | null
         }
         Update: {
           comment?: string | null
@@ -55,6 +57,7 @@ export type Database = {
           id?: number
           like?: number | null
           title?: string | null
+          user?: number | null
         }
         Relationships: []
       }
