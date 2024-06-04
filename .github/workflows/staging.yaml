@@ -23,7 +23,7 @@ jobs:
   deploy_db:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.result != 'success' }} 
+    if: ${{ needs.lint.result == 'success' }} 
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
