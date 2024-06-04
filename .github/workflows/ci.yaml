@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  types_checking:
     runs-on: ubuntu-latest
 
     steps:

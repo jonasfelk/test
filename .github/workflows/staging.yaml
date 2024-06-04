@@ -1,4 +1,4 @@
-name: Deploy Migrations to Staging
+name: Deploy Migrations to Production
 
 on:
   push:
@@ -7,13 +7,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  lint:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20.x.x
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run lint:types
+      # - run: npm run test
+
+  deploy_db:
+    needs: lint
+    runs-on: ubuntu-latest
+    if: ${{ needs.lint.result != 'success' }} 
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
-      SUPABASE_PROJECT_ID: ${{ secrets.STAGING_PROJECT_ID }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.PRODUCTION_DB_PASSWORD }}
+      SUPABASE_PROJECT_ID: ${{ secrets.PRODUCTION_PROJECT_ID }}
 
     steps:
       - uses: actions/checkout@v4
@@ -24,3 +39,44 @@ jobs:
 
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
       - run: supabase db push
+
+  stop_cloudflare_deploy:
+    needs: lint
+    runs-on: ubuntu-latest
+    if: ${{ needs.lint.result != 'success' }} 
+
+    steps:
+      - run: |
+          curl -X PUT "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/pause" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            --data '{"paused":true}'
+
+
+
+      # - name: Install dependencies
+      #   run: npm install
+
+      # - name: Build project
+      #   run: npx @cloudflare/next-on-pages@1
+
+  # publish:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     deployments: write
+  #   name: Publish to Cloudflare Pages
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+
+  #     # Run a build step here if your project requires
+
+  #     - name: Publish to Cloudflare Pages
+  #       uses: cloudflare/pages-action@1
+  #       with:
+  #         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  #         accountId: 2fe55ec2924319fd78ffefd0e3d213ff
+  #         projectName: test
+  #         directory: /
+  #         gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
