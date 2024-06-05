@@ -18,13 +18,12 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run lint:types
-      - run: exit 1 
-      - run: "Lint result: ${{ job.status }}" 
+      - run: exit 1  # Искусственная ошибка для проверки остановки деплоя
 
   deploy_db:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.result == 'success' }} 
+    if: ${{ needs.lint.result == 'success' }}  # Проверка статуса задачи lint
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -42,7 +41,7 @@ jobs:
   stop_cloudflare_deploy:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.outcome != 'success' }} 
+    if: ${{ needs.lint.result != 'success' }}  # Проверка статуса задачи lint
 
     steps:
       - run: |
