@@ -18,13 +18,11 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run lint:types
-      - run: exit 1 
-      # - run: npm run test
 
   deploy_db:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.result == 'success' }} 
+    if: ${{ needs.lint.result == 'success' }}  # Убедитесь, что это условие проверяет статус успешно выполненной задачи
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -33,18 +31,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: supabase/setup-cli@v1
         with:
           version: latest
-
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
       - run: supabase db push
 
   stop_cloudflare_deploy:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.result != 'success' }} 
+    if: ${{ needs.lint.result != 'success' }}  # Убедитесь, что это условие проверяет статус неуспешной задачи
 
     steps:
       - run: |
@@ -52,7 +48,6 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_KEY }}" \
             -H "Content-Type: application/json" \
             --data '{"paused":true}'
-
 
 
       # - name: Install dependencies
