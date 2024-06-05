@@ -42,7 +42,7 @@ jobs:
   stop_cloudflare_deploy:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.result != 'success' }}  
+    if: ${{ needs.lint.outcome != 'success' }} 
 
     steps:
       - run: |
