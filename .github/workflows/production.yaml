@@ -9,6 +9,8 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    outputs:
+      lint_status: ${{ steps.lint_step.outcome }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -16,14 +18,16 @@ jobs:
           node-version: 20.x.x
           cache: npm
       - run: npm ci
-      - run: npm run lint
-      - run: npm run lint:types
-      - run: exit 1  # Искусственная ошибка для проверки остановки деплоя
+      - id: lint_step
+        run: |
+          npm run lint
+          npm run lint:types
+        continue-on-error: true
 
   deploy_db:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.result == 'success' }}  # Проверка статуса задачи lint
+    if: ${{ needs.lint.outputs.lint_status == 'success' }}
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -41,7 +45,7 @@ jobs:
   stop_cloudflare_deploy:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.result != 'success' }}  # Проверка статуса задачи lint
+    if: ${{ needs.lint.outputs.lint_status != 'success' }}
 
     steps:
       - run: |
