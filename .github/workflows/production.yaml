@@ -18,6 +18,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run lint:types
+      - run: exit 1 
       # - run: npm run test
 
   deploy_db:
@@ -47,7 +48,7 @@ jobs:
 
     steps:
       - run: |
-          curl -X PUT "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/pause" \
+          curl -X PUT "https://api.cloudflare.com/client/v4/zones/febebcd3cb65b8e6448eab269871e344/pause" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_KEY }}" \
             -H "Content-Type: application/json" \
             --data '{"paused":true}'
