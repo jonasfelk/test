@@ -22,6 +22,7 @@ jobs:
         run: |
           npm run lint
           npm run lint:types
+          exit 1  # Искусственная ошибка для проверки остановки деплоя
         continue-on-error: true
 
   deploy_db:
