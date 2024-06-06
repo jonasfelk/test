@@ -23,15 +23,7 @@ jobs:
       #   run: echo "::set-output name=status::${{ job.status }}"
       # - name: Check lint result
       #   if: steps.lint_status.outputs.status != 'success'
-      # - run: exit 1
-
-  check_lint_result:
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "Lint conclusion: ${{ needs.lint.conclusion }}"
-          echo "Lint result: ${{ needs.lint.result }}"
+      - run: exit 1
 
   deploy_db:
     needs: lint
@@ -50,24 +42,6 @@ jobs:
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
       - run: supabase db push
 
-  # stop_cloudflare_deploy:
-  #       needs: lint
-  #       runs-on: ubuntu-latest
-      
-  #       steps:
-  #         - name: Stop Cloudflare Deploy on Lint Failure
-  #           run: |
-  #             curl -X PUT "https://api.cloudflare.com/client/v4/accounts/2fe55ec2924319fd78ffefd0e3d213ff/pages/projects/test" \
-  #               -H "Authorization: Bearer Dft4jIg2uxX5FlwTVnDxSCZax5EwTJ4NhT2hN53V" \
-  #               -H "Content-Type: application/json" \
-  #               --data '{"paused":true}'
-
-      # - name: Install dependencies
-      #   run: npm install
-
-      # - name: Build project
-      #   run: npx @cloudflare/next-on-pages@1
-
   deploy_cloudflare:
         needs: lint
         # if: ${{ needs.lint.result == 'success' }}
@@ -75,17 +49,13 @@ jobs:
         permissions:
           contents: read
           deployments: write
-        name: Deploy to Cloudflare Pages
         steps:
-          - name: Checkout
-            uses: actions/checkout@v4
-          - name: Build
-            run: npx @cloudflare/next-on-pages@1  # Замените эту команду на вашу команду сборки, если она отличается
-          - name: Publish
-            uses: cloudflare/pages-action@v1
-            with:
-                apiToken: Dft4jIg2uxX5FlwTVnDxSCZax5EwTJ4NhT2hN53V
-                accountId: 2fe55ec2924319fd78ffefd0e3d213ff
-                projectName: test
-                directory: .vercel/output/static
-                gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
+           - uses: actions/checkout@v4
+           - run: npx @cloudflare/next-on-pages@1  
+           - uses: cloudflare/pages-action@v1
+             with:
+               apiToken: Dft4jIg2uxX5FlwTVnDxSCZax5EwTJ4NhT2hN53V
+               accountId: 2fe55ec2924319fd78ffefd0e3d213ff
+               projectName: test
+               directory: .vercel/output/static
+               gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
