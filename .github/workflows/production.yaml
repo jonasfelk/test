@@ -77,8 +77,9 @@ jobs:
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: W0HgGrtJ1uSFn11J3dr5vS0uALXLuO5fzlHqWerd
           accountId: 2fe55ec2924319fd78ffefd0e3d213ff
           projectName: test
           directory: /
           gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
+          wranglerVersion: 3
