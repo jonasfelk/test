@@ -31,7 +31,6 @@ jobs:
   deploy_db:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.conclusion == 'success' }}  # Проверка статуса задачи lint
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -49,7 +48,7 @@ jobs:
   stop_cloudflare_deploy:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.conclusion != 'success' }}  # Проверка статуса задачи lint
+    
     steps:
       - run: |
           echo "Stopping Cloudflare deploy due to lint failure"
