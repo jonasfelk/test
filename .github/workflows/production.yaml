@@ -44,17 +44,17 @@ jobs:
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
       - run: supabase db push
 
-  stop_cloudflare_deploy:
-        needs: lint
-        runs-on: ubuntu-latest
+  # stop_cloudflare_deploy:
+  #       needs: lint
+  #       runs-on: ubuntu-latest
       
-        steps:
-          - name: Stop Cloudflare Deploy on Lint Failure
-            run: |
-              curl -X PUT "https://api.cloudflare.com/client/v4/accounts/2fe55ec2924319fd78ffefd0e3d213ff/pages/projects/test" \
-                -H "Authorization: Bearer Dft4jIg2uxX5FlwTVnDxSCZax5EwTJ4NhT2hN53V" \
-                -H "Content-Type: application/json" \
-                --data '{"paused":true}'
+  #       steps:
+  #         - name: Stop Cloudflare Deploy on Lint Failure
+  #           run: |
+  #             curl -X PUT "https://api.cloudflare.com/client/v4/accounts/2fe55ec2924319fd78ffefd0e3d213ff/pages/projects/test" \
+  #               -H "Authorization: Bearer Dft4jIg2uxX5FlwTVnDxSCZax5EwTJ4NhT2hN53V" \
+  #               -H "Content-Type: application/json" \
+  #               --data '{"paused":true}'
 
       # - name: Install dependencies
       #   run: npm install
@@ -62,22 +62,22 @@ jobs:
       # - name: Build project
       #   run: npx @cloudflare/next-on-pages@1
 
-  # deploy:
-  #       runs-on: ubuntu-latest
-  #       permissions:
-  #         contents: read
-  #         deployments: write
-  #       name: Deploy to Cloudflare Pages
-  #       steps:
-  #         - name: Checkout
-  #           uses: actions/checkout@v3
-  #         - name: Build
-  #           run: npx @cloudflare/next-on-pages@1  # Замените эту команду на вашу команду сборки, если она отличается
-  #         - name: Publish
-  #           uses: cloudflare/pages-action@v1
-  #           with:
-  #               apiToken: YjW57VcYBMjfE0PINwCWbqJZqR0jPVSCkrzbrt2w
-  #               accountId: 2fe55ec2924319fd78ffefd0e3d213ff
-  #               projectName: test
-  #               directory: /
-  #               gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
+  deploy:
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          deployments: write
+        name: Deploy to Cloudflare Pages
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+          - name: Build
+            run: npx @cloudflare/next-on-pages@1  # Замените эту команду на вашу команду сборки, если она отличается
+          - name: Publish
+            uses: cloudflare/pages-action@v1
+            with:
+                apiToken: Dft4jIg2uxX5FlwTVnDxSCZax5EwTJ4NhT2hN53V
+                accountId: 2fe55ec2924319fd78ffefd0e3d213ff
+                projectName: test
+                directory: /
+                gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
