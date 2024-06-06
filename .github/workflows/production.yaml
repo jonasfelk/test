@@ -23,11 +23,10 @@ jobs:
   check_lint_result:
     needs: lint
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - run: |
-          echo "Lint result:"
-          echo "${{ needs.lint.result }}"
+          echo "Lint conclusion: ${{ needs.lint.conclusion }}"
+          echo "Lint result: ${{ needs.lint.result }}"
 
   deploy_db:
     needs: lint
@@ -50,14 +49,16 @@ jobs:
   stop_cloudflare_deploy:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.conclusion != 'success' }}  # Проверка статуса задачи lint
-
+    # Remove the if condition for debugging purposes
+    # if: ${{ needs.lint.conclusion != 'success' }}
     steps:
       - run: |
+          echo "Stopping Cloudflare deploy due to lint failure"
           curl -X PUT "https://api.cloudflare.com/client/v4/zones/febebcd3cb65b8e6448eab269871e344/pause" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"paused":true}'
+
 
       # - name: Install dependencies
       #   run: npm install
