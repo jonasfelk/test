@@ -18,7 +18,6 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run lint:types
-      - run: exit 1 
 
   check_lint_result:
     needs: lint
@@ -51,7 +50,6 @@ jobs:
       
         steps:
           - name: Stop Cloudflare Deploy on Lint Failure
-            if: ${{ needs.lint.conclusion == 'failure' }}
             run: |
               curl -X PATCH "https://api.cloudflare.com/client/v4/accounts/2fe55ec2924319fd78ffefd0e3d213ff/pages/projects/test" \
                 -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
