@@ -23,7 +23,7 @@ jobs:
       #   run: echo "::set-output name=status::${{ job.status }}"
       # - name: Check lint result
       #   if: steps.lint_status.outputs.status != 'success'
-      - run: exit 1
+      # - run: exit 1
 
   check_lint_result:
     needs: lint
