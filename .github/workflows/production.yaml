@@ -49,8 +49,7 @@ jobs:
   stop_cloudflare_deploy:
     needs: lint
     runs-on: ubuntu-latest
-    # Remove the if condition for debugging purposes
-    # if: ${{ needs.lint.conclusion != 'success' }}
+    if: ${{ needs.lint.conclusion != 'success' }}  # Проверка статуса задачи lint
     steps:
       - run: |
           echo "Stopping Cloudflare deploy due to lint failure"
@@ -58,7 +57,6 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"paused":true}'
-
 
       # - name: Install dependencies
       #   run: npm install
