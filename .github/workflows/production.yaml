@@ -69,7 +69,7 @@ jobs:
       #   run: npx @cloudflare/next-on-pages@1
 
   deploy:
-        if: ${{ needs.lint.conclusion == 'success' }} 
+        if: ${{ needs.lint.result == 'success' }}
         runs-on: ubuntu-latest
         permissions:
           contents: read
