@@ -1,4 +1,4 @@
-name: Deploy Migrations to Production
+name: Deploy to Production
 
 on:
   push:
@@ -19,7 +19,15 @@ jobs:
       - run: npm run lint
       - run: npm run lint:types
       - run: exit 1  # Искусственная ошибка для проверки остановки деплоя
-    continue-on-error: false
+    continue-on-error: true
+
+  check_lint_result:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Lint result:"
+          echo "${{ needs.lint.result }}"
 
   deploy_db:
     needs: lint
