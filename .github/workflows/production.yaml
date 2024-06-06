@@ -9,8 +9,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    outputs:
-      lint_status: ${{ steps.lint_step.outcome }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -18,17 +16,15 @@ jobs:
           node-version: 20.x.x
           cache: npm
       - run: npm ci
-      - id: lint_step
-        run: |
-          npm run lint
-          npm run lint:types
-          exit 1  # Искусственная ошибка для проверки остановки деплоя
-        continue-on-error: true
+      - run: npm run lint
+      - run: npm run lint:types
+      - run: exit 1  # Искусственная ошибка для проверки остановки деплоя
+    continue-on-error: true
 
   deploy_db:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.outputs.lint_status == 'success' }}
+    if: ${{ needs.lint.result == 'success' }}  # Проверка статуса задачи lint
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -46,12 +42,12 @@ jobs:
   stop_cloudflare_deploy:
     needs: lint
     runs-on: ubuntu-latest
-    if: ${{ needs.lint.outputs.lint_status != 'success' }}
+    if: ${{ needs.lint.result != 'success' }}  # Проверка статуса задачи lint
 
     steps:
       - run: |
           curl -X PUT "https://api.cloudflare.com/client/v4/zones/febebcd3cb65b8e6448eab269871e344/pause" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_KEY }}" \
+            -H "Authorization: Bearer b185c7cbde5b55eed665a085348ea817ab24c" \
             -H "Content-Type: application/json" \
             --data '{"paused":true}'
 
