@@ -54,7 +54,7 @@ jobs:
               curl -X PATCH "https://api.cloudflare.com/client/v4/accounts/2fe55ec2924319fd78ffefd0e3d213ff/pages/projects/test" \
                 -H "Authorization: Bearer Dft4jIg2uxX5FlwTVnDxSCZax5EwTJ4NhT2hN53V" \
                 -H "Content-Type: application/json" \
-                --data '{"production_branch": "main"}'
+                --data '{"paused":true}'
 
       # - name: Install dependencies
       #   run: npm install
