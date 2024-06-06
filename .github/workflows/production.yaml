@@ -68,9 +68,9 @@ jobs:
       # - name: Build project
       #   run: npx @cloudflare/next-on-pages@1
 
-  deploy:
+  deploy_cloudflare:
         needs: lint
-        if: ${{ needs.lint.result == 'success' }}
+        # if: ${{ needs.lint.result == 'success' }}
         runs-on: ubuntu-latest
         permissions:
           contents: read
