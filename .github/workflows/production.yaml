@@ -51,7 +51,6 @@ jobs:
       
         steps:
           - name: Stop Cloudflare Deploy on Lint Failure
-            if: ${{ needs.lint.conclusion == 'failure' }}
             run: |
               curl -X PATCH "https://api.cloudflare.com/client/v4/accounts/2fe55ec2924319fd78ffefd0e3d213ff/pages/projects/test" \
                 -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
