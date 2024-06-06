@@ -79,8 +79,8 @@ jobs:
         steps:
           - name: Checkout
             uses: actions/checkout@v4
-          - name: Build
-            run: npx @cloudflare/next-on-pages@1  # Замените эту команду на вашу команду сборки, если она отличается
+          # - name: Build
+          #   run: npx @cloudflare/next-on-pages@1  # Замените эту команду на вашу команду сборки, если она отличается
           - name: Publish
             uses: cloudflare/pages-action@v1
             with:
