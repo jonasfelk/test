@@ -82,4 +82,3 @@ jobs:
           projectName: test
           directory: /.vercel/output/static
           gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
-          wranglerVersion: 3
