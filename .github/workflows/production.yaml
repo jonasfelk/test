@@ -23,7 +23,7 @@ jobs:
   check_lint_result:
     needs: lint
     runs-on: ubuntu-latest
-    continue-on-error: true
+    
     steps:
       - run: |
           echo "Lint result:"
