@@ -76,7 +76,7 @@ jobs:
           - name: Publish
             uses: cloudflare/pages-action@v1
             with:
-                apiToken: W0HgGrtJ1uSFn11J3dr5vS0uALXLuO5fzlHqWerd
+                apiToken: YjW57VcYBMjfE0PINwCWbqJZqR0jPVSCkrzbrt2w
                 accountId: 2fe55ec2924319fd78ffefd0e3d213ff
                 projectName: test
                 directory: /
