@@ -80,6 +80,6 @@ jobs:
           apiToken: W0HgGrtJ1uSFn11J3dr5vS0uALXLuO5fzlHqWerd
           accountId: 2fe55ec2924319fd78ffefd0e3d213ff
           projectName: test
-          directory: /
+          directory: /.vercel/output/static
           gitHubToken: ${{ secrets.CLOUDFLARE_PAGES_GITHUB_TOKEN }}
           wranglerVersion: 3
