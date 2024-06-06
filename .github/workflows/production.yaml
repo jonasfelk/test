@@ -18,12 +18,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run lint:types
-      # - name: Set lint status
-      #   id: lint_status
-      #   run: echo "::set-output name=status::${{ job.status }}"
-      # - name: Check lint result
-      #   if: steps.lint_status.outputs.status != 'success'
-      - run: exit 1
+      # - run: exit 1
 
   deploy_db:
     needs: lint
@@ -44,7 +39,6 @@ jobs:
 
   deploy_cloudflare:
         needs: lint
-        # if: ${{ needs.lint.result == 'success' }}
         runs-on: ubuntu-latest
         permissions:
           contents: read
