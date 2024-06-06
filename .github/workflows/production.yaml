@@ -52,7 +52,7 @@ jobs:
       - run: |
           echo "Stopping Cloudflare deploy due to lint failure"
           curl -X PUT "https://api.cloudflare.com/client/v4/zones/febebcd3cb65b8e6448eab269871e344/pause" \
-            -H "Authorization: Bearer S4QeFTS0637EpHYOQpTpZOHA8Ip1QFUh13mJqzcC" \
+            -H "Authorization: Bearer YrTwqdMNCJ3DmBEcX9wB_xwLzGnvJOdMomea5vrx" \
             -H "Content-Type: application/json" \
             --data '{"paused":true}'
 
