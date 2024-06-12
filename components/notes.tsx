@@ -25,7 +25,7 @@ export default function Notes() {
 
   return (
     <div>
-      {notes.data?.map((note) => (
+      {notes?.map((note) => (
         <div key={note.id}>
           {note.title}
         </div>
