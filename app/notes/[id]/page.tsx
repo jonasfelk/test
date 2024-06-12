@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
-import { prefetchQuery } from '@supabase-cache-helpers/postgrest-react-query'
+
 import { getCountryById } from '@/services/getCountryById'
 import Country from '@/components/country'
 
@@ -14,7 +14,7 @@ export default async function CountryPage({ params }: { params: { id: number } }
   const supabase = useSupabaseServer(cookieStore)
  
   
-  await prefetchQuery(queryClient, getCountryById(supabase, params.id))
+  await queryClient.prefetchQuery({queryKey: ['notes321'], queryFn: async () => await getCountryById(supabase, params.id)})
 
   return (
     // Neat! Serialization is now as easy as passing props.
