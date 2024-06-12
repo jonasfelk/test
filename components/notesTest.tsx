@@ -19,6 +19,7 @@ export default function NotesTest() {
     
   // });
   
+console.log(notes);
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -30,7 +31,7 @@ export default function NotesTest() {
 
   return (
     <div>
-      {notes?.data?.map((note: any) => (
+      {notes?.map((note) => (
         <div key={note.id}>
 
           <Link href={`/notes/${note.id}`}> {note.title}</Link>
