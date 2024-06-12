@@ -30,7 +30,7 @@ export default function NotesTest() {
 
   return (
     <div>
-      {notes.data?.map((note: any) => (
+      {notes?.data?.map((note: any) => (
         <div key={note.id}>
 
           <Link href={`/notes/${note.id}`}> {note.title}</Link>
