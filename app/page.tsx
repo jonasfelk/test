@@ -1,12 +1,12 @@
-import Notes from "@/components/notes";
+
 import NotesTest from "@/components/notesTest";
 
-import { fetchTodo, getAllNotes } from "@/services/getAllNotes";
+import { getAllNotes } from "@/services/getAllNotes";
 import useSupabaseServer from "@/utils/supabase/server";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { cookies } from "next/headers";
-import Link from "next/link";
+
 
 export const runtime = 'edge'
 export default async function Home() {
