@@ -1,6 +1,6 @@
 'use client'
 
-import { fetchTodo, getAllNotes } from '@/services/getAllNotes'
+import { getAllNotes } from '@/services/getAllNotes'
 import useSupabaseBrowser from '@/utils/supabase/client'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'

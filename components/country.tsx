@@ -4,9 +4,8 @@ import { getCountryById } from '@/services/getCountryById'
 import useSupabaseBrowser from '@/utils/supabase/client';
 
 import { useQuery } from '@supabase-cache-helpers/postgrest-react-query'
-import { cookies } from 'next/headers';
-import { useParams } from 'next/navigation';
 
+export const runtime = 'edge'
 export default function Country({ id }: { id: number }) {
   const supabase = useSupabaseBrowser()
   // This useQuery could just as well happen in some deeper

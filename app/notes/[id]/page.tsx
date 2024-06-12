@@ -5,7 +5,7 @@ import Country from '@/components/country'
 
 import useSupabaseServer from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
-import { useParams } from 'next/navigation'
+
 
 export const runtime = 'edge'
 export default async function CountryPage({ params }: { params: { id: number } }) {
