@@ -1,11 +1,37 @@
 import { TypedSupabaseClient } from '@/types/TypedSupabaseClient'
+import { PostgrestError } from '@supabase/supabase-js';
 
-export function getAllNotes(client: TypedSupabaseClient) {
-  return client
+type Note = {
+  id: number;
+  title: string | null;
+  desc: string | null;
+  comment: string | null;
+};
+
+export async function getAllNotes(client: TypedSupabaseClient) {
+  const { data, error } = await client
     .from('notes')
-    .select('*')
-}
+    .select()
 
+  if (error || !data) {
+    console.error('Error fetching notes:', error);
+    return [];
+  }
+
+  return data
+}
+// export async function getAllNotes(client: TypedSupabaseClient): Promise<Note[]> {
+//   const { data, error } = await client
+//     .from('notes')
+//     .select();
+
+//   if (error || !data) {
+//     console.error('Error fetching notes:', error);
+//     return [];
+//   }
+
+//   return data;
+// }
 
 export async function fetchTodo() {
   const response = await fetch('https://jsonplaceholder.typicode.com/todos');
