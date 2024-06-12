@@ -1,23 +1,31 @@
-import { createClient } from '@/utils/supabase/server'
+import Notes from "@/components/notes";
+import NotesTest from "@/components/notesTest";
+
+import { fetchTodo, getAllNotes } from "@/services/getAllNotes";
+import useSupabaseServer from "@/utils/supabase/server";
+import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { cookies } from "next/headers";
+import Link from "next/link";
+
 export const runtime = 'edge'
 export default async function Home() {
-  const supabase = createClient()
-  const { data: notes } = await supabase.from('notes').select()
-
-  console.log(notes)
+  const queryClient = new QueryClient()
+  const cookieStore = cookies()
+  const supabase = useSupabaseServer(cookieStore)
+  
+  // await queryClient.prefetchQuery({queryKey: ['todo'], queryFn: async () => await fetchTodo()})
+  await queryClient.prefetchQuery({queryKey: ['notes321'], queryFn: async () => await getAllNotes(supabase)})
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-between p-24'>
       <h1 className='text-6xl font-bold'>Hello World!!!trrtrt</h1>
-      {notes?.map((note) => (
-        <p
-          className='text-2xl text-white'
-          key={note.id}
-        >
-          {note.title}
-          {note.desc}
-        </p>
-      ))}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+      {/* <Notes/> */}
+      <NotesTest/>
+      
+      <ReactQueryDevtools initialIsOpen={false} />
+      </HydrationBoundary>
     </main>
   )
 }
