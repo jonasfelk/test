@@ -5,7 +5,7 @@ import { createBrowserClient } from '@supabase/ssr';
 import useSupabaseBrowser from '@/utils/supabase/client'
 import { useQuery } from '@tanstack/react-query'
 
-
+export const runtime = 'edge'
 export default function Notes() {
   const supabase = useSupabaseBrowser()
   

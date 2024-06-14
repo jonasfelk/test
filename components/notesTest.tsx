@@ -9,9 +9,10 @@ export const runtime = 'edge'
 export default function NotesTest() {
   const supabase = useSupabaseBrowser()
   
-  const { data: notes, isLoading, isError } = useQuery({
-    queryKey: ['notes321'],
-    queryFn: async () => await getAllNotes(supabase),
+  const { data: notes, isLoading, isError, isFetching, refetch,  error } = useQuery({
+    queryKey: ['notes'],
+    queryFn: () => getAllNotes(supabase),
+    staleTime: 1000 * 60,
   });
   // const { data: notes, isLoading, isError, status} = useQuery({
   //   queryKey: ['todo'],
@@ -19,18 +20,30 @@ export default function NotesTest() {
     
   // });
   
-console.log(notes);
+// console.log(notes);
 
   if (isLoading) {
     return <div>Loading...</div>
   }
 
-  if (isError || !notes) {
-    return <div>Error</div>
+  if (isError) {
+    console.error('Ошибка при получении заметок:', error);
+    return <div>Ошибка: {error.message}</div>;
   }
 
   return (
     <div>
+       <button onClick={() => {
+        console.log('Refetching...');
+        refetch().then(() => {
+          console.log('Refetch completed');
+        }).catch(err => {
+          console.error('Refetch error:', err);
+        });
+      }}>
+        Обновить
+      </button>
+      {isFetching && <div>Обновление данных...</div>}
       {notes?.map((note) => (
         <div key={note.id}>
 

@@ -1,8 +1,7 @@
-
 import { TypedSupabaseClient } from '@/types/TypedSupabaseClient'
 
-export function getCountryById(client: TypedSupabaseClient, countryId: number) {
-  return client
+export async function getCountryById(client: TypedSupabaseClient, countryId: number) {
+  return await client
     .from('notes')
     .select(
       'id, title'
