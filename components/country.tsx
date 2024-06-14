@@ -11,8 +11,8 @@ export default function Country({ id }: { id: number }) {
   const supabase = useSupabaseBrowser()
   // This useQuery could just as well happen in some deeper
   // child to <Posts>, data will be available immediately either way
-  const { data, isLoading } = useQuery({queryKey: ['notes321'], queryFn: async () => await getCountryById(supabase, id)})
-
+  const { data, isLoading } = useQuery({queryKey: ['notesId'], queryFn: () => getCountryById(supabase, id)})
+  
   return (
     <div>
       {isLoading && <p>Loading...</p>}

@@ -8,35 +8,38 @@ type Note = {
   comment: string | null;
 };
 
-export async function getAllNotes(client: TypedSupabaseClient) {
-  const { data, error } = await client
-    .from('notes')
-    .select()
-
-  if (error || !data) {
-    console.error('Error fetching notes:', error);
-    return [];
-  }
-
-  return data
-}
 // export async function getAllNotes(client: TypedSupabaseClient): Promise<Note[]> {
 //   const { data, error } = await client
 //     .from('notes')
-//     .select();
+//     .select()
 
 //   if (error || !data) {
 //     console.error('Error fetching notes:', error);
 //     return [];
 //   }
 
-//   return data;
+//   return data
 // }
+export async function getAllNotes(client: TypedSupabaseClient) {
+  try {
+    const { data, error } = await client
+      .from('notes')
+      .select('*');
+    
+    if (error) {
+      throw new Error(error.message);
+    }
 
-export async function fetchTodo() {
-  const response = await fetch('https://jsonplaceholder.typicode.com/todos');
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
+    return data;
+  } catch (error) {
+    console.error('Ошибка при получении заметок:', error);
+    throw error;
   }
-  return response.json();
 }
+// export async function fetchTodo() {
+//   const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+//   if (!response.ok) {
+//     throw new Error('Network response was not ok');
+//   }
+//   return response.json();
+// }

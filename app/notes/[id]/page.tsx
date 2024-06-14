@@ -14,7 +14,7 @@ export default async function CountryPage({ params }: { params: { id: number } }
   const supabase = useSupabaseServer(cookieStore)
  
   
-  await queryClient.prefetchQuery({queryKey: ['notes321'], queryFn: async () => await getCountryById(supabase, params.id)})
+  await queryClient.prefetchQuery({queryKey: ['notesId'], queryFn: () => getCountryById(supabase, params.id)})
 
   return (
     // Neat! Serialization is now as easy as passing props.

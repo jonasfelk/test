@@ -15,7 +15,7 @@ export default async function Home() {
   const supabase = useSupabaseServer(cookieStore)
   
   // await queryClient.prefetchQuery({queryKey: ['todo'], queryFn: async () => await fetchTodo()})
-  await queryClient.prefetchQuery({queryKey: ['notes321'], queryFn: async () => await getAllNotes(supabase)})
+  await queryClient.prefetchQuery({queryKey: ['notes'], queryFn: () => getAllNotes(supabase)})
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-between p-24'>
