@@ -24,7 +24,9 @@ export async function getAllNotes(client: TypedSupabaseClient) {
   try {
     const { data, error } = await client
       .from('notes')
-      .select('*');
+      .select('*')
+      .throwOnError()
+      // .then((result) => result.data);
     
     if (error) {
       throw new Error(error.message);

@@ -1,18 +1,27 @@
 'use client'
 
 import { getAllNotes } from '@/services/getAllNotes'
-import useSupabaseBrowser from '@/utils/supabase/client'
+import { Note } from '@/services/mutation'
+import { browserClient } from '@/utils/supabase/client'
+
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 
-export const runtime = 'edge'
-export default function NotesTest() {
-  const supabase = useSupabaseBrowser()
-  
+// export const runtime = 'edge'
+
+type Props = {
+  initialData: Note[] | undefined; // Указываем явно тип initialData как Note[] | undefined
+}
+export default function NotesTest({ initialData }: Props) {
+  // const supabase = useSupabaseBrowser()
+  const supabase = browserClient()
   const { data: notes, isLoading, isError, isFetching, refetch,  error } = useQuery({
     queryKey: ['notes'],
     queryFn: () => getAllNotes(supabase),
+    initialData,
     staleTime: 1000 * 60,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
   // const { data: notes, isLoading, isError, status} = useQuery({
   //   queryKey: ['todo'],
@@ -46,8 +55,7 @@ export default function NotesTest() {
       {isFetching && <div>Обновление данных...</div>}
       {notes?.map((note) => (
         <div key={note.id}>
-
-          <Link href={`/notes/${note.id}`}> {note.title}</Link>
+          <Link prefetch={false} href={`/notes/${note.id}`}> {note.title}</Link>
         </div>
       ))}
     </div>
