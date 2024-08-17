@@ -11,11 +11,11 @@ const initialVideos = [
   { id: 3, src: "https://www.w3schools.com/html/mov_bbb.mp4" },
   {
     id: 4,
-    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
+    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/bxtm6wilwienc3wxhudy.mp4",
   },
   {
     id: 5,
-    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
+    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/chldaenaaoiiipmqwjln.mp4",
   },
   {
     id: 6,
