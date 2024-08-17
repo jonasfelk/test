@@ -27,10 +27,11 @@ export default async function Home() {
     <main className='flex min-h-screen flex-col items-center justify-between p-24'>
       <h1 className='text-6xl font-bold'>Hello World!!!trrtrt</h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
+      <h2>test123</h2>
       {/* <Notes/> */}
-      <NotesTest/>
+      {/* <NotesTest/>
       <AddNotes/>
-      <CustomImage/>
+      <CustomImage/> */}
       <ReactQueryDevtools initialIsOpen={false} />
       </HydrationBoundary>
     </main>
