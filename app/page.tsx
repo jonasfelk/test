@@ -1,5 +1,6 @@
 
 import CustomImage from "@/components/CustomImage";
+import VideoShorts from "@/components/VideoShorts";
 import AddNotes from "@/components/addNotes";
 import NotesTest from "@/components/notesTest";
 
@@ -24,10 +25,10 @@ export default async function Home() {
   
   
   return (
-    <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-      <h1 className='text-6xl font-bold'>Hello World!!!trrtrt</h1>
+    <main className='"flex flex-col items-center justify-between overflow-hidden bg-black"'>
+      {/* <h1 className='text-6xl font-bold'>Hello World!!!trrtrt</h1> */}
       <HydrationBoundary state={dehydrate(queryClient)}>
-      <h2>test123</h2>
+      <VideoShorts />
       {/* <Notes/> */}
       {/* <NotesTest/>
       <AddNotes/>
