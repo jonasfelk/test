@@ -27,14 +27,32 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
+  const [loaded, setLoaded] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const handleEnded = () => {
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play(); // Перезапуск видео
+      }
+    };
+
+    videoRef.current?.addEventListener("ended", handleEnded);
+
+    return () => {
+      videoRef.current?.removeEventListener("ended", handleEnded);
+    };
+  }, []);
 
   useEffect(() => {
     if (isActive) {
-      videoRef.current?.play();
+      videoRef.current?.play().then(() => setIsPlaying(true)).catch((err) => console.error("Play error: ", err));
     } else {
       if (videoRef.current) {
         videoRef.current.pause();
-        videoRef.current.currentTime = 0; // Сброс времени на начало
+        videoRef.current.currentTime = 0;
+        setIsPlaying(false);
       }
     }
   }, [isActive]);
@@ -44,7 +62,9 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
       if (videoRef.current && !isSeeking) {
         const currentTime = videoRef.current.currentTime;
         const duration = videoRef.current.duration;
-        setProgress((currentTime / duration) * 100);
+        if (duration > 0) {
+          setProgress((currentTime / duration) * 100);
+        }
       }
     };
 
@@ -54,6 +74,25 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
       videoRef.current?.removeEventListener("timeupdate", handleTimeUpdate);
     };
   }, [isSeeking]);
+
+  useEffect(() => {
+    const handleProgress = () => {
+      if (videoRef.current) {
+        const buffered = videoRef.current.buffered;
+        const duration = videoRef.current.duration;
+        if (buffered.length > 0 && duration > 0) {
+          const loaded = (buffered.end(buffered.length - 1) / duration) * 100;
+          setLoaded(loaded);
+        }
+      }
+    };
+
+    videoRef.current?.addEventListener("progress", handleProgress);
+
+    return () => {
+      videoRef.current?.removeEventListener("progress", handleProgress);
+    };
+  }, []);
 
   const handleSeekStart = () => {
     setIsSeeking(true);
@@ -76,6 +115,18 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
       const barWidth = event.currentTarget.clientWidth;
       const newTime = (clickX / barWidth) * videoRef.current.duration;
       setProgress((newTime / videoRef.current.duration) * 100);
+    }
+  };
+
+  const togglePlayPause = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        videoRef.current.play();
+        setIsPlaying(true);
+      }
     }
   };
 
@@ -129,7 +180,35 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
                 transition: isSeeking ? "none" : "width 0.2s",
               }}
             />
+            <div
+              style={{
+                width: `${loaded}%`,
+                height: "100%",
+                background: "rgba(255, 255, 255, 0.5)",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                zIndex: 1,
+              }}
+            />
           </div>
+          <button
+            onClick={togglePlayPause}
+            style={{
+              position: "absolute",
+              bottom: 20,
+              left: 20,
+              padding: "10px 20px",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              zIndex: 2,
+            }}
+          >
+            {isPlaying ? "Pause" : "Play"}
+          </button>
         </>
       )}
     </div>
@@ -146,7 +225,6 @@ const VideoShorts = () => {
       setCurrentVideoIndex((prevIndex) => {
         const newIndex = prevIndex + 1;
         if (newIndex > 0) {
-          // Удаляем предыдущие видео
           setVideos((prevVideos) => prevVideos.slice(newIndex));
         }
         return newIndex;
@@ -189,7 +267,7 @@ const VideoShorts = () => {
         overflowY: "scroll",
         scrollSnapType: "y mandatory",
         backgroundColor: "black",
-        WebkitOverflowScrolling: "touch", // плавная прокрутка для iOS
+        WebkitOverflowScrolling: "touch",
       }}
       onScroll={(e) => {
         const { scrollTop, clientHeight } = e.currentTarget;
