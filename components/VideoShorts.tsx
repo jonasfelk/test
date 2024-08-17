@@ -5,17 +5,17 @@ export const runtime = 'edge'
 const initialVideos = [
   {
     id: 1,
-    src: "https://videos.pexels.com/video-files/3946082/3946082-uhd_1440_2732_25fps.mp4",
+    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
   },
   { id: 2, src: "https://www.w3schools.com/html/movie.mp4" },
   { id: 3, src: "https://www.w3schools.com/html/mov_bbb.mp4" },
   {
     id: 4,
-    src: "https://videos.pexels.com/video-files/7382274/7382274-hd_1080_1920_30fps.mp4",
+    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
   },
   {
     id: 5,
-    src: "https://videos.pexels.com/video-files/5075222/5075222-uhd_1440_2732_25fps.mp4",
+    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
   },
   {
     id: 6,
