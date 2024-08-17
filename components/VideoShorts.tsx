@@ -19,16 +19,56 @@ const initialVideos = [
   },
   {
     id: 6,
-    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
+    src: "https://res.cloudinary.com/videoapi-demo/video/upload/e_previewf_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
   },
 ];
 
-const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
+const VideoItem = ({ video, isActive, preload }: { video: any; isActive: boolean; preload?: boolean }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
-  const [isSeeking, setIsSeeking] = useState(false);
   const [loaded, setLoaded] = useState(0);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSeeking, setIsSeeking] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVideoVisible(true);
+          } else {
+            setIsVideoVisible(false);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isActive && isVideoVisible) {
+      videoRef.current?.play().then(() => setIsPlaying(true)).catch((err) => console.error("Play error: ", err));
+    } else {
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+        setIsPlaying(false);
+      }
+    }
+  }, [isActive, isVideoVisible]);
 
   useEffect(() => {
     const handleEnded = () => {
@@ -44,18 +84,6 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
       videoRef.current?.removeEventListener("ended", handleEnded);
     };
   }, []);
-
-  useEffect(() => {
-    if (isActive) {
-      videoRef.current?.play().then(() => setIsPlaying(true)).catch((err) => console.error("Play error: ", err));
-    } else {
-      if (videoRef.current) {
-        videoRef.current.pause();
-        videoRef.current.currentTime = 0;
-        setIsPlaying(false);
-      }
-    }
-  }, [isActive]);
 
   useEffect(() => {
     const handleTimeUpdate = () => {
@@ -87,12 +115,40 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
       }
     };
 
+    const handleCanPlay = () => {
+      setIsLoading(false); // Видео готово к воспроизведению
+    };
+
     videoRef.current?.addEventListener("progress", handleProgress);
+    videoRef.current?.addEventListener("canplay", handleCanPlay);
 
     return () => {
       videoRef.current?.removeEventListener("progress", handleProgress);
+      videoRef.current?.removeEventListener("canplay", handleCanPlay);
     };
   }, []);
+
+  const handleBuffering = () => {
+    if (videoRef.current) {
+      setIsBuffering(videoRef.current?.readyState < 4);
+    }
+  };
+
+  useEffect(() => {
+    videoRef.current?.addEventListener("waiting", handleBuffering);
+    videoRef.current?.addEventListener("playing", handleBuffering);
+
+    return () => {
+      videoRef.current?.removeEventListener("waiting", handleBuffering);
+      videoRef.current?.removeEventListener("playing", handleBuffering);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (preload) {
+      videoRef.current?.load(); // Предзагрузка видео
+    }
+  }, [preload]);
 
   const handleSeekStart = () => {
     setIsSeeking(true);
@@ -141,9 +197,24 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
         overflow: "hidden",
       }}
     >
+      {isLoading && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            color: "white",
+            fontSize: "20px",
+            zIndex: 10,
+          }}
+        >
+          Загрузка видео...
+        </div>
+      )}
       <video
         ref={videoRef}
-        src={video.src}
+        src={isVideoVisible ? video.src : ""}
         style={{
           width: "100%",
           height: "100%",
@@ -153,6 +224,9 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
         muted
         controls={false}
         preload="auto"
+        loop
+        onLoadStart={() => setIsLoading(true)}
+        onCanPlay={() => setIsLoading(false)}
       />
       {isActive && (
         <>
@@ -209,6 +283,20 @@ const VideoItem = ({ video, isActive }: { video: any; isActive: boolean }) => {
           >
             {isPlaying ? "Pause" : "Play"}
           </button>
+          {isBuffering && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "white",
+                fontSize: "20px",
+              }}
+            >
+              Буферизация...
+            </div>
+          )}
         </>
       )}
     </div>
@@ -224,9 +312,6 @@ const VideoShorts = () => {
     if (direction === "up" && currentVideoIndex < videos.length - 1) {
       setCurrentVideoIndex((prevIndex) => {
         const newIndex = prevIndex + 1;
-        if (newIndex > 0) {
-          setVideos((prevVideos) => prevVideos.slice(newIndex));
-        }
         return newIndex;
       });
     } else if (direction === "down" && currentVideoIndex > 0) {
@@ -285,7 +370,11 @@ const VideoShorts = () => {
             height: "100vh",
           }}
         >
-          <VideoItem video={video} isActive={currentVideoIndex === index} />
+          <VideoItem
+            video={video}
+            isActive={currentVideoIndex === index}
+            preload={index === currentVideoIndex + 1} // Предзагрузка следующего видео
+          />
         </div>
       ))}
     </div>
