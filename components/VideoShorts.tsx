@@ -19,11 +19,23 @@ const initialVideos = [
   },
   {
     id: 6,
-    src: "https://res.cloudinary.com/videoapi-demo/video/upload/e_previewf_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
+    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/ndicjbgsahci3ksaxo6l.mp4",
+  },
+  {
+    id: 7,
+    src: "https://res.cloudinary.com/videoapi-demo/video/upload/f_auto,q_auto/v1/fai1n9brqkg3vxpdd8ef.mp4",
   },
 ];
 
-const VideoItem = ({ video, isActive, preload }: { video: any; isActive: boolean; preload?: boolean }) => {
+const VideoItem = ({
+  video,
+  isActive,
+  preload,
+}: {
+  video: any;
+  isActive: boolean;
+  preload?: boolean;
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
   const [loaded, setLoaded] = useState(0);
@@ -37,11 +49,7 @@ const VideoItem = ({ video, isActive, preload }: { video: any; isActive: boolean
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVideoVisible(true);
-          } else {
-            setIsVideoVisible(false);
-          }
+          setIsVideoVisible(entry.isIntersecting);
         });
       },
       { threshold: 0.5 }
@@ -60,7 +68,10 @@ const VideoItem = ({ video, isActive, preload }: { video: any; isActive: boolean
 
   useEffect(() => {
     if (isActive && isVideoVisible) {
-      videoRef.current?.play().then(() => setIsPlaying(true)).catch((err) => console.error("Play error: ", err));
+      videoRef.current
+        ?.play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => console.error("Play error: ", err));
     } else {
       if (videoRef.current) {
         videoRef.current.pause();
@@ -195,6 +206,7 @@ const VideoItem = ({ video, isActive, preload }: { video: any; isActive: boolean
         alignItems: "center",
         position: "relative",
         overflow: "hidden",
+        backgroundColor: "black",
       }}
     >
       {isLoading && (
@@ -214,7 +226,7 @@ const VideoItem = ({ video, isActive, preload }: { video: any; isActive: boolean
       )}
       <video
         ref={videoRef}
-        src={isVideoVisible ? video.src : ""}
+        src={isVideoVisible || preload ? video.src : ""}
         style={{
           width: "100%",
           height: "100%",
@@ -310,12 +322,9 @@ const VideoShorts = () => {
 
   const handleSwipe = (direction: "up" | "down") => {
     if (direction === "up" && currentVideoIndex < videos.length - 1) {
-      setCurrentVideoIndex((prevIndex) => {
-        const newIndex = prevIndex + 1;
-        return newIndex;
-      });
+      setCurrentVideoIndex((prevIndex) => prevIndex + 1);
     } else if (direction === "down" && currentVideoIndex > 0) {
-      setCurrentVideoIndex(currentVideoIndex - 1);
+      setCurrentVideoIndex((prevIndex) => prevIndex - 1);
     }
   };
 
@@ -373,7 +382,7 @@ const VideoShorts = () => {
           <VideoItem
             video={video}
             isActive={currentVideoIndex === index}
-            preload={index === currentVideoIndex + 1} // Предзагрузка следующего видео
+            preload={index === currentVideoIndex + 1 || index === currentVideoIndex - 1} // Предзагрузка следующего и предыдущего видео
           />
         </div>
       ))}
