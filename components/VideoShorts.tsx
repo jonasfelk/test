@@ -1,5 +1,6 @@
+'use client'
 import React, { useState, useRef, useEffect } from "react";
-
+export const runtime = 'edge'
 // Пример списка видео
 const initialVideos = [
   {
